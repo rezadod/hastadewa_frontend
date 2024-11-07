@@ -22,11 +22,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Navbar from '@/components/core/navbar';
+import Image from 'next/image';
 const formSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
-
+import logo from "@/public/hastadewa.png"
+import loginImage from "@/public/login.png"
 export default function Login() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,9 +74,15 @@ export default function Login() {
 
   return (
     <div className="w-full min-h-screen flex justify-end bg-muted">
-      <div className="w-1/3 min-h-screen flex justify-center items-center bg-white shadow-sm">
+      {/* <Navbar /> */}
+      <div className='w-2/3 flex justify-center items-center'>
+        <Image src={loginImage.src} width={1500} height={1000} alt='login image' className='h-[80vh] w-auto' />
+      </div>
+      <div className="w-1/3 min-h-screen flex justify-center items-center bg-card shadow-sm">
         <Card className="border-none shadow-none w-3/4">
           <CardHeader>
+            <Image src={logo.src} width={1000} height={1000} alt="Logo" className="h-auto max-w-3/4 mb-10" />
+            
             <CardTitle>Login</CardTitle>
             <CardDescription>Please Login to Continue</CardDescription>
           </CardHeader>
@@ -81,7 +90,7 @@ export default function Login() {
             <Form {...form}>
               <form
                 onSubmit={(e) => onSubmit(e)}
-                className="space-y-8 max-w-3xl mx-auto py-10"
+                className="space-y-8 max-w-3xl mx-auto py-4"
               >
                 <FormField
                   control={form.control}
