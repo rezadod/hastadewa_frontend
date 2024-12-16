@@ -17,27 +17,51 @@ const authOptions: NextAuthOptions ={
               password: { label: 'Password', type: 'password' }
             },
             async authorize(credentials) {
-              const { username, password } = credentials as { username: string, password: string };
-              console.log(username, password);
-              
-      
-              // ngirim username password ke api //dirubah ng url sg bener
-              const res = await fetch('http://50.50.50.58/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-              });
-              if (!res.ok) {
-                    throw new Error("Login gagal");
+              const { username, password, formType } = credentials as { username: string, password: string, formType: string };
+
+              if (formType == "Register") {
+                const res = await fetch('http://50.50.50.40:6666/api/auth/login', {
+                  method: 'POST',
+                  headers: { 
+                    'X-Powered-By': 'Express',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Access-Control-Allow-Origin': '*'
+                   },
+                  body: JSON.stringify({ username, password })
+                });
+
+                if (!res.ok) {
+                      throw new Error("Register gagal" + res);
+                }
+                const user = await res.json();
+                if (res.ok && user) {
+                  return user;
+                }
+                return null;
+
+              } else {
+                // login
+                const res = await fetch('http://50.50.50.40:6666/api/auth/login', {
+                  method: 'POST',
+                  headers: { 
+                    'X-Powered-By': 'Express',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                  body: JSON.stringify({ username, password })
+                });
+
+                if (!res.ok) {
+                    throw new Error("Login gagal" +res);
                 }
 
-              //berhasil
-              const user = await res.json();
-              if (res.ok && user) {
-                return user;
+                const user = await res.json();
+                if (res.ok && user) {
+                  return user;
+                }
+                // gagal
+                return null;
               }
-              // gagal
-              return null;
             }
           })
     ],
